@@ -50,6 +50,7 @@ from time import sleep
 import subprocess
 import string
 import multiprocessing
+import locale
 
 import socket
 
@@ -252,9 +253,13 @@ class CPUMonitor():
 
         load_dict = { 0: 'OK', 1: 'High Load', 2: 'Very High Load' }
 
+        new_env = dict(os.environ)
+        new_env['LC_NUMERIC'] = 'C' 
+
         try:
             p = subprocess.Popen('uptime', stdout = subprocess.PIPE,
-                                stderr = subprocess.PIPE, shell = True)
+                                stderr = subprocess.PIPE, shell = True,
+                                env = new_env)
             stdout, stderr = p.communicate()
             retcode = p.returncode
 
@@ -291,10 +296,14 @@ class CPUMonitor():
 
         load_dict = { 0: 'OK', 1: 'High Load', 2: 'Error' }
 
+        new_env = dict(os.environ)
+        new_env['LC_NUMERIC'] = 'C' 
+
         try:
             p = subprocess.Popen('mpstat -P ALL 1 1',
                                 stdout = subprocess.PIPE,
-                                stderr = subprocess.PIPE, shell = True)
+                                stderr = subprocess.PIPE, shell = True,
+                                env = new_env)
             stdout, stderr = p.communicate()
             retcode = p.returncode
 
